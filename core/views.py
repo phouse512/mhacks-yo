@@ -51,6 +51,16 @@ class RegisterUser(MethodView):
 		except Exception as e:
 			return jsonify(status=str(e))
 
+"""class LoginUser(MethodView):
+
+	def post(self):
+		number = request.form['number']
+		password = request.form['password']
+
+		user = User.objects(phone=number)
+		if flask_bcrypt.check_password_hash(user.hashed_pw, request.form["password"]):
+
+"""
 
 
 # Register the urls

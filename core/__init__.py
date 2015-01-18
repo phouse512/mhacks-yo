@@ -13,6 +13,7 @@ app.config["SECRET_KEY"] = "secretwords"
 
 db = MongoEngine(app)
 flask_bcrypt = Bcrypt(app)
+cors = CORS(app)
 
 
 def register_blueprints(app):

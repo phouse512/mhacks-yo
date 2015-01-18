@@ -5,3 +5,4 @@ WTForms
 mongoengine
 flask_mongoengine
 gunicorn
+flask-cors
