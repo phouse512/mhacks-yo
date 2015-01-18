@@ -43,7 +43,7 @@ class StatusView(MethodView):
 
 		for member in group.members:
 			member_groups = Group.objects(owner=member)
-			for sub_group in member_groups
+			for sub_group in member_groups:
 				if user in sub_group.members:
 					member_status = Status.objects(user=member, group=sub_group).order_by('-created_at')
 					if len(member_status) < 1:
