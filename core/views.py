@@ -36,20 +36,25 @@ class UserStatusView(MethodView):
 class RegisterUser(MethodView):
 
 	def post(self):
-		try:
-			first_name = request.form['firstName']
-			last_name = request.form['lastName']
-			number = request.form['number']
-			password = flask_bcrypt.generate_password_hash(request.form['password'])
 
-			new_user = User(first_name=first_name,last_name=last_name,phone=number,hashed_pw=password)
-			new_user.save()
+		print request.get_json(force=True)
 
-			print new_user.id
+		data = request.get_json(force=True)
 
-			return jsonify(status='success', token=str(new_user.id))
-		except Exception as e:
-			return jsonify(status=str(e))
+		
+		#first_name = request.form['firstName']
+		#last_name = request.form['lastName']
+		#number = request.form['number']
+		password = flask_bcrypt.generate_password_hash(data['password'])
+
+		new_user = User(first_name=data['firstName'],last_name=data['lastName'],phone=data['number'], hashed_pw=password)
+		new_user.save()
+
+		print new_user.id
+
+		return jsonify(status='success', token=str(new_user.id))
+		#except Exception as e:
+		#	return jsonify(status=str(e))
 
 """class LoginUser(MethodView):
 
