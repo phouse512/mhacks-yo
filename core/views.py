@@ -33,44 +33,37 @@ class UserStatusView(MethodView):
 		status = Status.objects(user=user[0]).order_by('-created_at')[0]
 		return jsonify(status=status, user=user)
 
-class RegisterUser(MethodView):
+class RegisterUserView(MethodView):
 
 	def post(self):
-
-		print request.get_json(force=True)
-
 		data = request.get_json(force=True)
-
-		
-		#first_name = request.form['firstName']
-		#last_name = request.form['lastName']
-		#number = request.form['number']
 		password = flask_bcrypt.generate_password_hash(data['password'])
 
 		new_user = User(first_name=data['firstName'],last_name=data['lastName'],phone=data['number'], hashed_pw=password)
 		new_user.save()
 
-		print new_user.id
-
 		return jsonify(status='success', token=str(new_user.id))
-		#except Exception as e:
-		#	return jsonify(status=str(e))
 
-"""class LoginUser(MethodView):
+class LoginUserView(MethodView):
 
 	def post(self):
-		number = request.form['number']
-		password = request.form['password']
+		data = request.get_json(force=True)
 
-		user = User.objects(phone=number)
-		if flask_bcrypt.check_password_hash(user.hashed_pw, request.form["password"]):
+		user = User.objects(phone=data['number'])
+		if len(user) > 0:
+			if flask_bcrypt.check_password_hash(user[0].hashed_pw, data['password']):
+				return jsonify(status='success', token=str(user[0].id))
+			else:
+				return jsonify(status='failure', message='Incorrect login credentials.')
+		else:
+			return jsonify(status='failure', message='User not found.')
 
-"""
 
 
 # Register the urls
 core.add_url_rule('/update', view_func=StatusView.as_view('list'))
 core.add_url_rule('/status/<user_id>/', view_func=UserStatusView.as_view('status'))
-core.add_url_rule('/register', view_func=RegisterUser.as_view('register'))
+core.add_url_rule('/register', view_func=RegisterUserView.as_view('register'))
+core.add_url_rule('/login', view_func=LoginUserView.as_view('login'))
 
 
