@@ -9,6 +9,7 @@ app.config['MONGODB_HOST'] = 'ds031671.mongolab.com'
 app.config['MONGODB_PORT'] = 31671
 app.config['MONGODB_USERNAME'] = 'phil'
 app.config['MONGODB_PASSWORD'] = 'house'
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 app.config["SECRET_KEY"] = "secretwords"
 
