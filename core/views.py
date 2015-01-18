@@ -77,6 +77,13 @@ class UserGroupsView(MethodView):
 		groups_owned_by = Group.objects(owner=user).all()
 		return jsonify(groups=groups_owned_by)
 
+class GroupMemberView(MethodView):
+
+	def get(self):
+		group_id = request.args.get("group_id")
+		members = Group.objects(id=group_id).first().members
+		return jsonify(members=members)
+
 
 # Register the urls
 core.add_url_rule('/update', view_func=StatusView.as_view('list'))
@@ -85,4 +92,5 @@ core.add_url_rule('/register', view_func=RegisterUserView.as_view('register'))
 core.add_url_rule('/login', view_func=LoginUserView.as_view('login'))
 core.add_url_rule('/possiblefriends', view_func=GatherFriendsView.as_view('possiblefriends'))
 core.add_url_rule('/groups', view_func=UserGroupsView.as_view('groups'))
+core.add_url_rule('/members', view_func=GroupMemberView.as_view('members'))
 
