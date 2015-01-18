@@ -5,6 +5,18 @@ from core import flask_bcrypt
 
 core = Blueprint('admin', __name__, template_folder='templates')
 
+from twilio.rest import TwilioRestClient
+import twilio.twiml
+
+
+
+class TwilioView(MethodView):
+
+	def post(self):
+		resp = twilio.twiml.Response()
+		resp.redirect("http://afternoon-fjord-7983.herokuapp.com/update")
+		return str(resp)
+
 
 class StatusView(MethodView):
 
@@ -13,16 +25,39 @@ class StatusView(MethodView):
 		#TODO : Hardcoded for now
 		username = "phouse512"
 		# get group id from post request
-		group_id = '54baba611f9f8061147cdc66'
+		group_id = '54bb45eb7ad44d6f2a58efa6'
 		# get status from post request
 		status = False
 		new_status = not bool(status)
-		user = User.objects(username=username)
-		group = Group.objects(id=group_id)
+		user = User.objects(phone='4403343916')
+		group = Group.objects(id=group_id).first()
 
 		new_status = Status(user=user, available=new_status, group=group)
 
 		new_status.save()
+
+		ACCOUNT_SID = "ACf2b361a5b8be85173d9db27f45cfb5d2" 
+		AUTH_TOKEN = "4b6edb9fb0efffc0fa1a3c293b8e16c4" 
+ 
+		client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN) 
+
+		for member in group.members:
+			member_groups = Group.objects(owner=member)
+			for sub_group in member_groups
+				if user in sub_group.members:
+					member_status = Status.objects(user=member, group=sub_group).order_by('-created_at')
+					if len(member_status) < 1:
+						check = False
+					else:
+						check = member_status[0].available
+
+					if check:
+						string = "%s %s is free!" % (user.first_name, user.last_name)
+						client.messages.create(
+							to=member.phone, 
+							from_="+12015747526", 
+							body=string,  
+						)
 
 		return jsonify(current_status=new_status.available)
 
@@ -86,6 +121,7 @@ class GroupMemberView(MethodView):
 
 
 # Register the urls
+core.add_url_rule('/twilio', view_func=TwilioView.as_view('twilio'))
 core.add_url_rule('/update', view_func=StatusView.as_view('list'))
 core.add_url_rule('/status/<user_id>/', view_func=UserStatusView.as_view('status'))
 core.add_url_rule('/register', view_func=RegisterUserView.as_view('register'))
@@ -93,4 +129,5 @@ core.add_url_rule('/login', view_func=LoginUserView.as_view('login'))
 core.add_url_rule('/possiblefriends', view_func=GatherFriendsView.as_view('possiblefriends'))
 core.add_url_rule('/groups', view_func=UserGroupsView.as_view('groups'))
 core.add_url_rule('/members', view_func=GroupMemberView.as_view('members'))
+
 
