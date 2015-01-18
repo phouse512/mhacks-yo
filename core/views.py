@@ -29,7 +29,7 @@ class StatusView(MethodView):
 		# get status from post request
 		status = False
 		new_status = not bool(status)
-		user = User.objects(phone='4403343916')
+		user = User.objects(phone='4403343916').first()
 		group = Group.objects(id=group_id).first()
 
 		new_status = Status(user=user, available=new_status, group=group)
@@ -63,8 +63,10 @@ class StatusView(MethodView):
 
 class UserStatusView(MethodView):
 
-	def get(self, user_id):
-		user = User.objects(id=user_id)
+	def get(self):
+		user_id = request.args.get("user_id")
+		group_id = request.args.get("group_id")
+		user = User.objects(id=user_id).first()
 		status = Status.objects(user=user[0]).order_by('-created_at')[0]
 		return jsonify(status=status, user=user)
 
