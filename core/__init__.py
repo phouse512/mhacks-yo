@@ -1,6 +1,7 @@
 from flask import Flask
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.bcrypt import Bcrypt
+from flask.ext.cors import CORS
 
 app = Flask(__name__)
 app.config['MONGODB_DB'] = 'mhacks'
