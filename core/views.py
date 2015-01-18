@@ -58,6 +58,16 @@ class LoginUserView(MethodView):
 		else:
 			return jsonify(status='failure', message='User not found.')
 
+class GatherFriendsView(MethodView):
+
+	def get(self):
+		user_id = request.args.get("user_id")
+		all_users = set(User.objects.all())
+		user = User.objects(id=user_id).first()
+		friends = set(list(user.friends) + list(user))
+
+		difference = list(all_users - friends)
+		return jsonify(users=difference)
 
 
 # Register the urls
@@ -65,5 +75,5 @@ core.add_url_rule('/update', view_func=StatusView.as_view('list'))
 core.add_url_rule('/status/<user_id>/', view_func=UserStatusView.as_view('status'))
 core.add_url_rule('/register', view_func=RegisterUserView.as_view('register'))
 core.add_url_rule('/login', view_func=LoginUserView.as_view('login'))
-
+core.add_url_rule('/possiblefriends', view_func=GatherFriendsView.as_view('possiblefriends'))
 
