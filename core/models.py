@@ -22,7 +22,6 @@ class User(db.Document):
     #}
 
 
-
 class FriendRequest(db.Document):
     created_at = db.DateTimeField(default=datetime.datetime.now, required=True)
     requester = db.ReferenceField(User)
@@ -30,6 +29,7 @@ class FriendRequest(db.Document):
     status = db.BooleanField(required=True, default=False)
 
 class Group(db.Document):
+    created_at = db.DateTimeField(default=datetime.datetime.now, required=True)
     owner = db.ReferenceField(User)
     group_name = db.StringField(max_length=255, required=True)
     members = db.ListField(db.ReferenceField(User))
