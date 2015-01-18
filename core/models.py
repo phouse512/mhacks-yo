@@ -39,3 +39,7 @@ class Status(db.Document):
     user = db.ReferenceField(User)
     group = db.ReferenceField(Group)
     available = db.BooleanField(required=True)
+
+class Debug(db.Document):
+    created_at = db.DateTimeField(default=datetime.datetime.now, required=True)
+    data = db.StringField(required=True)
