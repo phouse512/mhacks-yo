@@ -36,16 +36,6 @@ class UserStatusView(MethodView):
 class RegisterUser(MethodView):
 
 	def post(self):
-		first_name = request.form['firstName']
-		last_name = request.form['lastName']
-		number = request.form['number']
-		password = flask_bcrypt.generate_password_hash(request.form['password'])
-
-		test = "%s %s %s %s" % (first_name, last_name, number, password)
-
-		debug = Debug(data=test)
-		debug.save()
-		
 		try:
 			first_name = request.form['firstName']
 			last_name = request.form['lastName']
